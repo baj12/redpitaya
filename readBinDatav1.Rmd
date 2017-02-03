@@ -1,0 +1,32 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{R}
+rm(list=ls())
+nInt=8192
+inputFile = "/Users/bernd/redpitaya/data/test.256.10000.bin.gz"
+
+binFP = gzcon(file(inputFile, "rb"))
+
+version = readBin(binFP, "integer", n=1,endian = "little", size= 4)
+decimation = readBin(binFP, "integer", n=1,endian = "little", size= 4)
+nCount =  readBin(binFP, "integer", n=1,endian = "little", size= 4)
+
+chanel1=rep(0,nCount*nInt)
+chanel2=rep(0,nCount*nInt)
+nc=1
+for (nc in 1:nCount){
+  st = (nc-1)
+  en = (nc * nInt) 
+  chanel1[st:en] = readBin(binFP, "integer", n=nInt,endian = "little", size= 2)
+  chanel2[st:en] = readBin(binFP, "integer", n=nInt,endian = "little", size= 2)
+  
+  #plot(chanel1, type='l')
+  
+  #plot(chanel2, type='l')
+}
+close(binFP)
+
+```
