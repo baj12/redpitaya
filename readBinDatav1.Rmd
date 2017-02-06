@@ -3,7 +3,7 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-```{R}
+```{r}
 rm(list=ls())
 nInt=8192
 inputFile = "data/test.256.100000.bin.gz"
@@ -14,15 +14,16 @@ version = readBin(binFP, "integer", n=1,endian = "little", size= 4)
 decimation = readBin(binFP, "integer", n=1,endian = "little", size= 4)
 nCount =  readBin(binFP, "integer", n=1,endian = "little", size= 4)
 
-maxread = 10
+maxread = 11
 
 nCount = maxread
-chanel1=rep(0,nCount*nInt)
-chanel2=rep(0,nCount*nInt)
-nc=1
-for (nc in 1:maxread){
-  st = (nc-1)*nInt + 1
-  en = (nc * nInt) 
+chanel1=rep(0,maxread*nInt)
+chanel2=rep(0,maxread*nInt)
+nc=12
+for (nc in 1:nCount){
+  ncc = (nc %% maxread)+1
+  st = (ncc-1)*nInt + 1
+  en = (ncc * nInt) 
   chanel1[st:en] = readBin(binFP, "integer", n=nInt,endian = "little", size= 2)
   chanel2[st:en] = readBin(binFP, "integer", n=nInt,endian = "little", size= 2)
 
@@ -31,5 +32,10 @@ for (nc in 1:maxread){
   #plot(chanel2, type='l')
 }
 close(binFP)
+```
+```{R}
+plot(chanel1, type='l')
+plot(chanel2, type='l')
+plot((chanel2-chanel1)[8000:9000], type='l')
 
 ```
